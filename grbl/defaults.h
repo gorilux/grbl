@@ -88,4 +88,8 @@
   #include "defaults/defaults_simulator.h"
 #endif
 
+#ifdef DEFAULTS_SABLE2015
+  #include "defaults/defaults_sable2015.h"
+#endif
+
 #endif

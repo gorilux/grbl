@@ -28,7 +28,7 @@ void spindle_init()
   // combined unless configured otherwise.
   #ifdef VARIABLE_SPINDLE
     SPINDLE_PWM_DDR |= (1<<SPINDLE_PWM_BIT); // Configure as PWM output pin.
-    #if defined(CPU_MAP_ATMEGA2560) || defined(USE_SPINDLE_DIR_AS_ENABLE_PIN)
+    #if defined(CPU_MAP_ATMEGA2560) || defined(CPU_MAP_ATMEGA1280) || defined(USE_SPINDLE_DIR_AS_ENABLE_PIN)
       SPINDLE_ENABLE_DDR |= (1<<SPINDLE_ENABLE_BIT); // Configure as output pin.
     #endif     
   // Configure no variable spindle and only enable pin.
@@ -48,7 +48,7 @@ void spindle_stop()
   // On the Uno, spindle enable and PWM are shared. Other CPUs have seperate enable pin.
   #ifdef VARIABLE_SPINDLE
     TCCRA_REGISTER &= ~(1<<COMB_BIT); // Disable PWM. Output voltage is zero.
-    #if defined(CPU_MAP_ATMEGA2560) || defined(USE_SPINDLE_DIR_AS_ENABLE_PIN)
+    #if defined(CPU_MAP_ATMEGA2560) || defined(CPU_MAP_ATMEGA1280) || defined(USE_SPINDLE_DIR_AS_ENABLE_PIN)
       #ifdef INVERT_SPINDLE_ENABLE_PIN
 		SPINDLE_ENABLE_PORT |= (1<<SPINDLE_ENABLE_BIT);  // Set pin to high
 	  #else
@@ -84,7 +84,7 @@ void spindle_set_state(uint8_t state, float rpm)
 
     #ifdef VARIABLE_SPINDLE
       // TODO: Install the optional capability for frequency-based output for servos.
-      #ifdef CPU_MAP_ATMEGA2560
+      #if defined(CPU_MAP_ATMEGA2560) || defined(CPU_MAP_ATMEGA1280) || defined(CPU_MAP_ATMEGA1280)
       	TCCRA_REGISTER = (1<<COMB_BIT) | (1<<WAVE1_REGISTER) | (1<<WAVE0_REGISTER);
         TCCRB_REGISTER = (TCCRB_REGISTER & 0b11111000) | 0x02 | (1<<WAVE2_REGISTER) | (1<<WAVE3_REGISTER); // set to 1/8 Prescaler
         OCR4A = 0xFFFF; // set the top 16bit value
@@ -108,7 +108,7 @@ void spindle_set_state(uint8_t state, float rpm)
       OCR_REGISTER = current_pwm; // Set PWM pin output
     
       // On the Uno, spindle enable and PWM are shared, unless otherwise specified.
-      #if defined(CPU_MAP_ATMEGA2560) || defined(USE_SPINDLE_DIR_AS_ENABLE_PIN) 
+      #if defined(CPU_MAP_ATMEGA2560) || defined(CPU_MAP_ATMEGA1280) || defined(USE_SPINDLE_DIR_AS_ENABLE_PIN)
         #ifdef INVERT_SPINDLE_ENABLE_PIN
           SPINDLE_ENABLE_PORT &= ~(1<<SPINDLE_ENABLE_BIT);
         #else
