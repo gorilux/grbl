@@ -37,6 +37,10 @@
   #include "cpu_map/cpu_map_atmega2560.h"
 #endif
 
+#ifdef CPU_MAP_ATMEGA1280 // (Arduino Mega 1280) Working @Gorilux
+  #include "cpu_map/cpu_map_atmega1280.h"
+#endif
+
 /* 
 #ifdef CPU_MAP_CUSTOM_PROC
   // For a custom pin map or different processor, copy and edit one of the available cpu
